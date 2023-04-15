@@ -7,17 +7,36 @@ class LangP extends GetxController {
   static void init() {}
 
   static const Map<String, List<String>> _words = {
+    '1-month'   : ['January', '1월'],
+    '2-month'   : ['February', '2월'],
+    '3-month'   : ['March', '3월'],
+    '4-month'   : ['April', '4월'],
+    '5-month'   : ['May', '5월'],
+    '6-month'   : ['June', '6월'],
+    '7-month'   : ['July', '7월'],
+    '8-month'   : ['August', '8월'],
+    '9-month'   : ['September', '9월'],
+    '10-month'  : ['October', '10월'],
+    '11-month'  : ['November', '11월'],
+    '12-month'  : ['December', '12월'],
+    'add'       : ['add', '추가'],
     'birth'     : ['birth', '생년월일'],
     'female'    : ['female', '여성'],
+    'friend'    : ['friend', '친구'],
     'goal'      : ['goal', '목표'],
     'google'    : ['google', '구글'],
     'height'    : ['height', '신장'],
     'language'  : ['language', '언어'],
+    'login'     : ['login', '로그인'],
+    'logout'    : ['logout', '로그아웃'],
     'male'      : ['male', '남성'],
     'next'      : ['next', '다음'],
     'nickname'  : ['nickname', '별명'],
     'register'  : ['register', '회원가입'],
+    'search'    : ['search', '검색'],
     'sex'       : ['sex', '성별'],
+    'times'     : ['times', '회'],
+    'today'     : ['today', '오늘'],
     'weight'    : ['weight', '체중'],
   };
 
@@ -39,19 +58,21 @@ class LangP extends GetxController {
       'tod-ent'   : ['Cannot enter today', '오늘은 입력할 수 없습니다'],
       'not-date'  : ['Entered date does not exist', '없는 날짜입니다'],
       'not-8'     : ['Enter eight letters', '여덟글자가 아닙니다'],
+      'ex-stat'   : ["$found's exercise status", '$found의 운동 현황'],
+      'cal-of'    : ['Calendar of $found', '$found 달력'],
     };
   }
 
   static int _langIndex(Lang lang) => Lang.values.indexOf(lang);
   static String find(String keyword, [Lang? lang]) {
     final langP = Get.find<LangP>();
-    return _words[keyword]![_langIndex(lang ?? langP.language)];
+    return _words[keyword]?[_langIndex(lang ?? langP.language)] ?? keyword;
   }
-  static String makeSentence(String keyword, String word, [Lang? lang]) {
+  static String makeSentence(String keyword, [String? word, Lang? lang]) {
     final langP = Get.find<LangP>();
-    return _sentences(word)[keyword]![_langIndex(lang ?? langP.language)];
+    return _sentences(word ?? '')[keyword]![_langIndex(lang ?? langP.language)];
   }
 
-  Lang language = Lang.kor;
+  Lang language = Lang.eng;
   void setLang(Lang l) { language = l; update(); }
 }

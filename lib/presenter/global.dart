@@ -1,5 +1,6 @@
 import 'package:enfp/presenter/model/user.dart';
-import 'package:enfp/presenter/page/friend.dart';
+import 'package:enfp/presenter/page/friend/friend.dart';
+import 'package:enfp/presenter/page/friend/search.dart';
 import 'package:enfp/presenter/page/home.dart';
 import 'package:enfp/presenter/page/lang.dart';
 import 'package:enfp/presenter/page/ranking.dart';
@@ -43,6 +44,7 @@ class GlobalP extends GetxController {
     Get.put(RegisterP());
     Get.put(HomeP());
     Get.put(FriendP());
+    Get.put(SearchP());
     Get.put(RankingP());
     Get.put(SettingP());
 

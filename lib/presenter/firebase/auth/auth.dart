@@ -4,7 +4,6 @@ import 'package:enfp/presenter/global.dart';
 import 'package:enfp/presenter/model/user.dart';
 import 'package:enfp/presenter/page/home.dart';
 import 'package:enfp/presenter/page/lang.dart';
-import 'package:enfp/presenter/page/register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
@@ -23,7 +22,7 @@ class AuthP {
   // }
 
   // 로그인 형식에 따른 피트윈 로그인
-  static Future fLogin(LoginType type) async {
+  static Future eLogin(LoginType type) async {
     UserCredential? userCredential;
     Map<String, dynamic>? json;
 
@@ -84,16 +83,16 @@ class AuthP {
   }
 
   // 피트윈 로그아웃
-  static void fLogout() {
+  static void eLogout() {
     Get.offAllNamed('/login');
     userP.logout();
     // eliminateLoginData();
   }
 
   // 피트윈 계정삭제
-  static void fDeleteAccount() {
+  static void eDeleteAccount() {
     userP.delete();
-    fLogout();
+    eLogout();
   }
 
   // static void loadLoginData() async {

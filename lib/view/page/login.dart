@@ -24,7 +24,7 @@ class LoginPage extends StatelessWidget {
               bottom: 100.0,
               child: EButton(
                 text: LangP.makeSentence('login', 'google'),
-                onPressed: () => AuthP.fLogin(LoginType.google),
+                onPressed: () => AuthP.eLogin(LoginType.google),
               ),
             ),
           ],

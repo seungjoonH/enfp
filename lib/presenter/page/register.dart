@@ -59,6 +59,7 @@ class RegisterP extends GetxController {
         'goal': inputP.goal,
         'regDate': toTimestamp(today),
         'records': [],
+        'friendUids': [],
       });
 
       userP.login(stranger);

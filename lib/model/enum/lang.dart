@@ -4,5 +4,5 @@ enum Lang {
   String get kr => ['영어', '한국어'][index];
   Lang get inverse => values[1 - index];
   static Lang toEnum(String string) =>
-      Lang.values.firstWhere((sex) => sex.name == string);
+      Lang.values.firstWhere((lang) => lang.name == string);
 }

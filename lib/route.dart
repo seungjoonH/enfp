@@ -1,6 +1,5 @@
-/* 라우트 관련 */
-
-import 'package:enfp/view/page/friend.dart';
+import 'package:enfp/view/page/friend/friend.dart';
+import 'package:enfp/view/page/friend/search.dart';
 import 'package:enfp/view/page/home.dart';
 import 'package:enfp/view/page/lang.dart';
 import 'package:enfp/view/page/login.dart';
@@ -26,6 +25,7 @@ class ERoute {
     '/login': const LoginPage(),
     '/home': const HomePage(),
     '/friend': const FriendPage(),
+    '/friend/search': const SearchPage(),
     '/ranking': const RankingPage(),
     '/setting': const SettingPage(),
   };

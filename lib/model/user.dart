@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enfp/global/date.dart';
+import 'package:enfp/model/enum/lang.dart';
 import 'package:enfp/model/enum/sex.dart';
 
 class EUser {
@@ -25,8 +26,13 @@ class EUser {
   late Timestamp _birth;
   late Timestamp _regDate;
 
+  late Lang lang;
+
   late int goal;
   List<Map<String, dynamic>> records = [];
+
+  List<String> friendUids = [];
+  List<EUser> friends = [];
 
   DateTime get birth => _birth.toDate();
   set birth(DateTime b) => toTimestamp(b);
@@ -47,8 +53,10 @@ class EUser {
     weight = json['weight'];
     _birth = json['birth'];
     _regDate = json['regDate'];
+    lang = Lang.toEnum(json['lang'] ?? 'eng');
     goal = json['goal'];
-    records = json['records'].cast<Map<String, dynamic>>();
+    records = json['records']?.cast<Map<String, dynamic>>() ?? [];
+    friendUids = json['friendUids']?.cast<String>() ?? [];
   }
 
   Map<String, dynamic> toJson() {
@@ -60,8 +68,10 @@ class EUser {
     json['weight'] = weight;
     json['birth'] = _birth;
     json['regDate'] = _regDate;
+    json['lang'] = lang.name;
     json['goal'] = goal;
     json['records'] = records;
+    json['friendUids'] = friendUids;
     return json;
   }
 
@@ -77,5 +87,14 @@ class EUser {
 
     return amount;
   }
+
+  bool getCompleted(DateTime date) {
+    for (Map<String, dynamic> record in records) {
+      if (isSameDate(record['date']!.toDate(), date)) return record['completed'] ?? false;
+    }
+    return false;
+  }
+
+  void addFriend(EUser friend) => friends.add(friend);
 
 }

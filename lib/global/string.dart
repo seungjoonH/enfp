@@ -1,6 +1,7 @@
 
 bool hasBottomConsonant(String input) {
-  return (input.runes.last - 0xAC00) % 28 != 0;
+  try { return (input.runes.last - 0xAC00) % 28 != 0; }
+  catch (_) { return false; }
 }
 
 String eunNeun(String input) => hasBottomConsonant(input) ? '은' : '는';

@@ -14,42 +14,59 @@ class EInputField extends StatelessWidget {
     this.hintText,
     this.keyboardType,
     this.invalid = false,
+    this.mini = false,
+    this.autofocus = false,
+    this.onChanged,
   }) : super(key: key);
 
   final TextEditingController? controller;
   final String? hintText;
   final TextInputType? keyboardType;
   final bool invalid;
+  final bool mini;
+  final bool autofocus;
+  final Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
-    TextStyle style = textTheme.titleMedium!;
+    TextStyle style = mini
+        ? textTheme.bodyMedium!
+        : textTheme.titleMedium!;
     Color errorColor = Theme.of(context).colorScheme.error;
     Color hintColor = Theme.of(context).colorScheme.outline;
 
     return ShakeWidget(
       autoPlay: invalid,
       shakeConstant: ShakeHorizontalConstant2(),
-      child: TextField(
-        controller: controller,
-        keyboardType: keyboardType,
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: invalid
-              ? style.copyWith(color: errorColor)
-              : style.copyWith(color: hintColor),
-          filled: true,
-          fillColor: Theme.of(context).colorScheme.background,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 15.0),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: invalid ? errorColor : Colors.transparent,
+      child: SizedBox(
+        width: mini ? 250.0 : double.infinity,
+        child: TextField(
+          controller: controller,
+          keyboardType: keyboardType,
+          cursorHeight: 20.0,
+          autofocus: autofocus,
+          onChanged: onChanged,
+          decoration: InputDecoration(
+            isDense: true,
+            hintText: hintText,
+            hintStyle: invalid
+                ? style.copyWith(color: errorColor)
+                : style.copyWith(color: hintColor),
+            filled: true,
+            fillColor: Theme.of(context).colorScheme.background,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 15.0, vertical: mini ? 4.0 : 10.0,
             ),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
-            borderRadius: BorderRadius.circular(10.0),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: invalid ? errorColor : Colors.transparent,
+              ),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
           ),
         ),
       ),
