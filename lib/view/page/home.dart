@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:enfp/global/date.dart';
+import 'package:enfp/global/number.dart';
 import 'package:enfp/global/string.dart';
 import 'package:enfp/global/theme.dart';
 import 'package:enfp/presenter/model/user.dart';
@@ -33,10 +34,71 @@ class HomePage extends StatelessWidget {
             physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Expanded(
+                      child: ECard(
+                        title: capitalizeFirstChar(LangP.find('score')),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Container(
+                              width: 100.0, height: 48.0,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50.0),
+                                color: Theme.of(context).colorScheme.background,
+                              ),
+                              child: Center(
+                                child: Text(toLocalString(userP.loggedUser.score)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 20.0),
+                    Expanded(
+                      child: ECard(
+                        title: capitalizeFirstChar(LangP.find('rank')),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Container(
+                              width: 48.0, height: 48.0,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Theme.of(context).colorScheme.background,
+                              ),
+                              child: Center(
+                                child: Text('1000'),
+                              ),
+                            ),
+                            const SizedBox(width: 5.0),
+                            Container(
+                              width: 48.0, height: 48.0,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Theme.of(context).colorScheme.background,
+                              ),
+                              child: Center(
+                                child: Text('1000'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20.0),
                 ECard(
                   title: capitalizeFirstChar(LangP.makeSentence('ex-stat', 'today')),
                   width: double.infinity,
-                  child:Column(
+                  onPressed: () {},
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       LinearPercentIndicator(

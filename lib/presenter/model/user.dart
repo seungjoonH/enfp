@@ -1,5 +1,6 @@
 import 'package:enfp/model/user.dart';
 import 'package:enfp/presenter/firebase/firebase.dart';
+import 'package:enfp/presenter/page/lang.dart';
 import 'package:get/get.dart';
 
 class UserP extends GetxController {
@@ -34,6 +35,7 @@ class UserP extends GetxController {
         .doc(loggedUser.uid).get()).data();
     if (json == null) return;
     loggedUser = EUser.fromJson(json);
+    LangP.lang = loggedUser.lang;
   }
 
   void save() => collection

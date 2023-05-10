@@ -32,7 +32,7 @@ class SearchP extends GetxController {
     users = [];
 
     if (keyword.isEmpty) return;
-    var dataList = await f.collection('users')
+    var dataList = await collection
         .where('nickname', isGreaterThanOrEqualTo: keyword)
         .where('nickname', isLessThan: '${keyword}z')
         .orderBy('nickname').get();

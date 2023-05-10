@@ -21,6 +21,7 @@ class LangP extends GetxController {
     '12-month'  : ['December', '12월'],
     'add'       : ['add', '추가'],
     'birth'     : ['birth', '생년월일'],
+    'entire'    : ['entire', '전체'],
     'female'    : ['female', '여성'],
     'friend'    : ['friend', '친구'],
     'goal'      : ['goal', '목표'],
@@ -32,7 +33,10 @@ class LangP extends GetxController {
     'male'      : ['male', '남성'],
     'next'      : ['next', '다음'],
     'nickname'  : ['nickname', '별명'],
+    'point'     : ['points', '포인트'],
+    'rank'      : ['rank', '랭킹'],
     'register'  : ['register', '회원가입'],
+    'score'     : ['score', '점수'],
     'search'    : ['search', '검색'],
     'sex'       : ['sex', '성별'],
     'times'     : ['times', '회'],
@@ -65,14 +69,17 @@ class LangP extends GetxController {
 
   static int _langIndex(Lang lang) => Lang.values.indexOf(lang);
   static String find(String keyword, [Lang? lang]) {
-    final langP = Get.find<LangP>();
-    return _words[keyword]?[_langIndex(lang ?? langP.language)] ?? keyword;
+    return _words[keyword]?[_langIndex(lang ?? LangP.lang)] ?? keyword;
   }
   static String makeSentence(String keyword, [String? word, Lang? lang]) {
-    final langP = Get.find<LangP>();
-    return _sentences(word ?? '')[keyword]![_langIndex(lang ?? langP.language)];
+    return _sentences(word ?? '')[keyword]![_langIndex(lang ?? LangP.lang)];
   }
 
-  Lang language = Lang.eng;
-  void setLang(Lang l) { language = l; update(); }
+  Lang _language = Lang.eng;
+
+  static Lang get lang => Get.find<LangP>()._language;
+  static set lang(Lang l) {
+    final langP = Get.find<LangP>();
+    langP._language = l; langP.update();
+  }
 }

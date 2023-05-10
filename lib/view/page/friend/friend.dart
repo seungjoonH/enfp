@@ -1,3 +1,4 @@
+import 'package:enfp/global/string.dart';
 import 'package:enfp/global/theme.dart';
 import 'package:enfp/model/user.dart';
 import 'package:enfp/presenter/model/user.dart';
@@ -56,7 +57,7 @@ class FriendPage extends StatelessWidget {
             child: Column(
               children: [
                 ECard(
-                  title: LangP.find('friend'),
+                  title: capitalizeFirstChar(LangP.find('friend')),
                   child: SizedBox(
                     width: double.infinity,
                     child: Column(

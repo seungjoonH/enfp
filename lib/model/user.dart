@@ -29,6 +29,7 @@ class EUser {
   late Lang lang;
 
   late int goal;
+  late int score;
   List<Map<String, dynamic>> records = [];
 
   List<String> friendUids = [];
@@ -54,7 +55,8 @@ class EUser {
     _birth = json['birth'];
     _regDate = json['regDate'];
     lang = Lang.toEnum(json['lang'] ?? 'eng');
-    goal = json['goal'];
+    goal = json['goal'] ?? 0;
+    score = json['score'] ?? 0;
     records = json['records']?.cast<Map<String, dynamic>>() ?? [];
     friendUids = json['friendUids']?.cast<String>() ?? [];
   }
@@ -70,6 +72,7 @@ class EUser {
     json['regDate'] = _regDate;
     json['lang'] = lang.name;
     json['goal'] = goal;
+    json['score'] = score;
     json['records'] = records;
     json['friendUids'] = friendUids;
     return json;
