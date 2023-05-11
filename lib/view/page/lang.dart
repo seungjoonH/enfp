@@ -29,7 +29,7 @@ class LangPage extends StatelessWidget {
               children: Lang.values.map<Widget>((l) => LangSelectionButton(
                 type: l,
                 selected: l == LangP.lang,
-                onPressed: () => LangP.lang = l,
+                onPressed: () => langP.setLang(l),
               )).toList()..insert(1, const SizedBox(height: 30.0)),
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:enfp/global/string.dart';
 import 'package:enfp/model/enum/lang.dart';
+import 'package:enfp/presenter/model/user.dart';
 import 'package:get/get.dart';
 
 class LangP extends GetxController {
@@ -78,8 +79,19 @@ class LangP extends GetxController {
   Lang _language = Lang.eng;
 
   static Lang get lang => Get.find<LangP>()._language;
-  static set lang(Lang l) {
-    final langP = Get.find<LangP>();
-    langP._language = l; langP.update();
+
+  void setLang(Lang l) {
+    _language = l; saveLang(); update();
+  }
+
+  void loadLang() {
+    final userP = Get.find<UserP>();
+    setLang(userP.loggedUser.lang);
+  }
+
+  void saveLang() {
+    final userP = Get.find<UserP>();
+    userP.loggedUser.lang = lang;
+    userP.save();
   }
 }

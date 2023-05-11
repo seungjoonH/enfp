@@ -25,6 +25,8 @@ class UserP extends GetxController {
   Future login(EUser user) async {
     Map<String, dynamic> json = user.toJson();
     loggedUser = EUser.fromJson(json);
+    final langP = Get.find<LangP>();
+    langP.loadLang();
     save();
   }
 
@@ -35,7 +37,6 @@ class UserP extends GetxController {
         .doc(loggedUser.uid).get()).data();
     if (json == null) return;
     loggedUser = EUser.fromJson(json);
-    LangP.lang = loggedUser.lang;
   }
 
   void save() => collection
