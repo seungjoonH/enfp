@@ -47,9 +47,10 @@ flutter:
   uses-material-design: true
 
   assets:
-    - asset/image/
+    - assets/image/
+    - assets/model/
 
   fonts:
     - family: Pretendard
       fonts:
-        - asset: asset/font/Pretendard/Pretendard-Medium.otf
+        - asset: assets/font/Pretendard/Pretendard-Medium.otf

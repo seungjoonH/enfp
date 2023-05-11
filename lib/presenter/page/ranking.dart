@@ -1,5 +1,5 @@
 import 'package:enfp/model/enum/rank_type.dart';
-import 'package:enfp/model/user.dart';
+import 'package:enfp/model/class/user.dart';
 import 'package:enfp/presenter/firebase/firebase.dart';
 import 'package:enfp/presenter/model/user.dart';
 import 'package:get/get.dart';
@@ -7,7 +7,11 @@ import 'package:get/get.dart';
 class RankingP extends GetxController {
   static get collection => f.collection('users');
 
-  static void toRanking() => Get.offAllNamed('/ranking');
+  static void toRanking() async {
+    final rankP = Get.find<RankingP>();
+    await rankP.loadUsers();
+    Get.offAllNamed('/ranking');
+  }
 
   RankType currentType = RankType.friend;
   List<EUser> users = [];

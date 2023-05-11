@@ -1,4 +1,5 @@
 import 'package:enfp/presenter/model/user.dart';
+import 'package:enfp/presenter/page/camera.dart';
 import 'package:enfp/presenter/page/friend/friend.dart';
 import 'package:enfp/presenter/page/friend/search.dart';
 import 'package:enfp/presenter/page/home.dart';
@@ -47,6 +48,7 @@ class GlobalP extends GetxController {
     Get.put(SearchP());
     Get.put(RankingP());
     Get.put(SettingP());
+    Get.put(CameraP());
 
     Get.put(InputP());
   }

@@ -2,7 +2,7 @@ import 'package:enfp/global/number.dart';
 import 'package:enfp/global/string.dart';
 import 'package:enfp/global/theme.dart';
 import 'package:enfp/model/enum/rank_type.dart';
-import 'package:enfp/model/user.dart';
+import 'package:enfp/model/class/user.dart';
 import 'package:enfp/presenter/model/user.dart';
 import 'package:enfp/presenter/page/lang.dart';
 import 'package:enfp/presenter/page/ranking.dart';

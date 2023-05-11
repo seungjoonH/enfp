@@ -1,7 +1,9 @@
+import 'package:camera/camera.dart';
 import 'package:enfp/firebase_options.dart';
 import 'package:enfp/global/theme.dart';
 import 'package:enfp/presenter/global.dart';
 import 'package:enfp/route.dart';
+import 'package:enfp/view/page/camera.dart';
 import 'package:enfp/view/page/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +12,7 @@ import 'package:get/get.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  descriptions = await availableCameras();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

@@ -1,6 +1,6 @@
 import 'package:enfp/global/date.dart';
 import 'package:enfp/model/enum/sex.dart';
-import 'package:enfp/model/user.dart';
+import 'package:enfp/model/class/user.dart';
 import 'package:enfp/presenter/model/user.dart';
 import 'package:enfp/presenter/page/home.dart';
 import 'package:enfp/presenter/widget/input.dart';

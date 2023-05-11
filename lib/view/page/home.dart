@@ -5,6 +5,7 @@ import 'package:enfp/global/number.dart';
 import 'package:enfp/global/string.dart';
 import 'package:enfp/global/theme.dart';
 import 'package:enfp/presenter/model/user.dart';
+import 'package:enfp/presenter/page/camera.dart';
 import 'package:enfp/presenter/page/lang.dart';
 import 'package:enfp/view/widget/bottom_bar.dart';
 import 'package:enfp/view/widget/card.dart';
@@ -97,7 +98,7 @@ class HomePage extends StatelessWidget {
                 ECard(
                   title: capitalizeFirstChar(LangP.makeSentence('ex-stat', 'today')),
                   width: double.infinity,
-                  onPressed: () {},
+                  onPressed: CameraP.toCamera,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

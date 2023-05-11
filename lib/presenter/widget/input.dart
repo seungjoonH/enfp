@@ -1,6 +1,6 @@
 import 'package:enfp/global/date.dart';
 import 'package:enfp/global/string.dart';
-import 'package:enfp/model/user.dart';
+import 'package:enfp/model/class/user.dart';
 import 'package:enfp/presenter/page/lang.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

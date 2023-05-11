@@ -1,3 +1,4 @@
+import 'package:enfp/view/page/camera.dart';
 import 'package:enfp/view/page/friend/friend.dart';
 import 'package:enfp/view/page/friend/search.dart';
 import 'package:enfp/view/page/home.dart';
@@ -28,6 +29,7 @@ class ERoute {
     '/friend/search': const SearchPage(),
     '/ranking': const RankingPage(),
     '/setting': const SettingPage(),
+    '/camera': const CameraPage(),
   };
 
   // 겟페이지 리스트

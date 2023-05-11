@@ -1,4 +1,4 @@
-import 'package:enfp/model/user.dart';
+import 'package:enfp/model/class/user.dart';
 import 'package:enfp/presenter/firebase/firebase.dart';
 import 'package:enfp/presenter/model/user.dart';
 import 'package:enfp/presenter/page/friend/friend.dart';
