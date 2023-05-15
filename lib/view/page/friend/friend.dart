@@ -7,6 +7,7 @@ import 'package:enfp/presenter/page/lang.dart';
 import 'package:enfp/view/widget/bottom_bar.dart';
 import 'package:enfp/view/widget/card.dart';
 import 'package:enfp/view/widget/input_field.dart';
+import 'package:enfp/view/widget/profile_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -65,13 +66,7 @@ class FriendPage extends StatelessWidget {
                         padding: const EdgeInsets.all(10.0),
                         child: Row(
                           children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(15.0),
-                              child: Image.network(
-                                'https://pbs.twimg.com/profile_images/1485050791488483328/UNJ05AV8_400x400.jpg',
-                                width: 40.0, height: 40.0,
-                              ),
-                            ),
+                            ProfileImageWidget(),
                             const SizedBox(width: 20.0),
                             SizedBox(
                               width: 180.0,

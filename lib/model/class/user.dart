@@ -25,6 +25,7 @@ class EUser {
   late int weight;
   late Timestamp _birth;
   late Timestamp _regDate;
+  String? imageUrl;
 
   late Lang lang;
 
@@ -54,6 +55,7 @@ class EUser {
     weight = json['weight'];
     _birth = json['birth'];
     _regDate = json['regDate'];
+    imageUrl = json['imageUrl'];
     lang = Lang.toEnum(json['lang'] ?? 'eng');
     goal = json['goal'] ?? 0;
     score = json['score'] ?? 0;
@@ -70,6 +72,7 @@ class EUser {
     json['weight'] = weight;
     json['birth'] = _birth;
     json['regDate'] = _regDate;
+    json['imageUrl'] = imageUrl;
     json['lang'] = lang.name;
     json['goal'] = goal;
     json['score'] = score;

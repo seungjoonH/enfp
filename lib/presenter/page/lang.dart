@@ -35,6 +35,7 @@ class LangP extends GetxController {
     'next'      : ['next', '다음'],
     'nickname'  : ['nickname', '별명'],
     'point'     : ['points', '포인트'],
+    'profile'   : ['profile', '프로필'],
     'rank'      : ['rank', '랭킹'],
     'register'  : ['register', '회원가입'],
     'score'     : ['score', '점수'],
