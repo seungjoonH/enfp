@@ -34,10 +34,9 @@ class SearchPage extends StatelessWidget {
                   children: searchP.strangers.map((user) => Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      ProfileImageWidget(),
+                      ProfileImageWidget(user: user),
                       const SizedBox(width: 20.0),
-                      SizedBox(
-                        width: 160.0,
+                      Expanded(
                         child: Text(user.nickname, style: textTheme.titleMedium),
                       ),
                       const SizedBox(width: 20.0),

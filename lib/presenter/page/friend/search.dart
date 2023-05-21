@@ -23,8 +23,8 @@ class SearchP extends GetxController {
   List<EUser> get strangers {
     final userP = Get.find<UserP>();
     List<EUser> usrs = [...users];
-    usrs.removeWhere((usr) => userP.loggedUser.friendUids.contains(usr.uid));
-    usrs.removeWhere((usr) => userP.loggedUser.uid == usr.uid);
+    usrs.removeWhere((usr) => userP.loggedUser!.friendUids.contains(usr.uid));
+    usrs.removeWhere((usr) => userP.loggedUser!.uid == usr.uid);
     return usrs;
   }
   
@@ -56,7 +56,7 @@ class SearchP extends GetxController {
 
   void addFriend(String uid) async {
     final userP = Get.find<UserP>();
-     userP.loggedUser.friendUids.add(uid);
+     userP.loggedUser!.friendUids.add(uid);
      userP.save();
      FriendP.toFriend();
      update();

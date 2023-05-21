@@ -1,172 +1,329 @@
-import 'dart:math';
-
 import 'package:camera/camera.dart';
+import 'package:enfp/global/theme.dart';
 import 'package:enfp/model/class/painter/inference.dart';
 import 'package:enfp/model/enum/part.dart';
-import 'package:enfp/util/classifier.dart';
+import 'package:enfp/presenter/page/camera.dart';
 import 'package:enfp/util/handler.dart';
 import 'package:enfp/util/isolate.dart';
 import 'package:enfp/util/painter.dart';
+import 'package:enfp/view/widget/scale_widget.dart';
 import 'package:flutter/material.dart';
-
-// 카메라 방향 (전면/후면)
-enum CameraDirection {
-  front, back;
-  get opposite => values[1 - index];
-}
-
-// 사용가능한 카메라 리스트
-List<CameraDescription>? descriptions;
+import 'package:get/get.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({Key? key}) : super(key: key);
 
   @override
-  State<CameraPage> createState() => _CameraPageState();
+  State<CameraPage> createState() => _CameraPage();
 }
 
-class _CameraPageState extends State<CameraPage> {
-  // 카메라 컨트롤러
-  late CameraController _cameraController;
-  // 카메라 방향
-  CameraDirection direction = CameraDirection.front;
-  // 카메라 줌 초깃값
-  double initZoom = .0;
-  // 카메라 줌
-  double zoom = 1.0;
-  // Classifier
-  late Classifier _classifier;
-  // Isolate
-  late IsolateUtils _isolate;
-  // Inferences
+class _CameraPage extends State<CameraPage> {
+  bool doPredict = false;
+  double widthRatio = 1.0;
+  double heightRatio = 1.0;
+
   Map<Part, Inference>? inferences;
+  late ExerciseHandler handler;
 
-  // Painter
-  late LimbPainter _painter;
-  // 예상값 측정 컨트롤 변수
-  bool doPredict = true;
-
-  // 캔버스 크기
-  Size? canvasSize;
-  // 가로 비율
-  double _widthRatio = 1.0;
-  // 세로 비율
-  double _heightRatio = 1.0;
+  late LimbPainter painter;
+  int frameCount = 0;
 
   @override
   void initState() {
     super.initState();
-    // 비동기 함수 호출
     initAsync();
-  }
-
-  void initAsync() async {
-    // 카메라 컨트롤러 초기화
-    _cameraController = CameraController(
-      descriptions![direction.index],
-      ResolutionPreset.medium,
-    );
-
-    // isolate 선언/실행
-    _isolate = IsolateUtils();
-    await _isolate.start();
-
-    // classifier 선언/실행
-    _classifier = Classifier();
-    _classifier.loadModel();
-
-    // 카메라 컨트롤러 초기화
-    await _cameraController.initialize();
-
-    // 이미지 스트리밍 시작
-    await _cameraController.startImageStream(createIsolate);
-    doPredict = true;
-
-    // Handler 초기화
-    ExerciseHandler.init();
-
-    setState(() {});
-  }
-
-  // 카메라 방향 전환
-  void toggleCameraDirection() {
-    doPredict = false;
-    direction = direction.opposite;
-    initAsync();
-  }
-
-  void createIsolate(CameraImage imageStream) async {
-    // flag 값에 따른 함수 실행 제어
-    if (!doPredict) return;
-    doPredict = false;
-
-    IsolateData isolateData = IsolateData(
-      cameraImage: imageStream,
-      interpreterAddress: _classifier.interpreter.address,
-    );
-
-    // 추정치 반환
-    List inferenceList = await _isolate.inference(isolateData);
-    // 처리하기 편한 방향으로 변경
-    inferences = {
-      for (int i = 0; i < inferenceList.length; i++)
-        Part.values[i] : Inference.list(inferenceList[i])
-          ..adjustRatio(_widthRatio, _heightRatio)
-    };
-
-    if (!mounted) return;
-    _widthRatio = canvasSize!.width / imageStream.width;
-    _heightRatio = canvasSize!.height / imageStream.height;
-
-    doPredict = true;
-    _painter = LimbPainter(inferences: inferences!);
-    setState(() {});
   }
 
   @override
   void dispose() {
     super.dispose();
-    // 카메라 컨트롤러 dispose
-    _cameraController.dispose();
+
+    final cameraP = Get.find<CameraP>();
+    cameraP.init();
+    cameraP.cameraController!.dispose();
   }
 
-  // 카메라 줌 레벨 설정
-  Future setZoomLevel(ScaleUpdateDetails details) async {
-    // 줌 범위 (1.0 ~ 189.0)
-    zoom = max(1.0, min(details.scale * initZoom, 189.0));
-    await _cameraController.setZoomLevel(zoom);
+  void initAsync() async {
+    final cameraP = Get.find<CameraP>();
+    await cameraP.init();
+    await cameraP.cameraController!
+        .startImageStream(createIsolate);
+    ExerciseHandler.squat();
+    setState(() {});
+  }
+
+  void createIsolate(CameraImage imageStream) async {
+    final cameraP = Get.find<CameraP>();
+
+    if (doPredict) return;
+    doPredict = true;
+
+    IsolateData isolateData = IsolateData(
+      cameraImage: imageStream,
+      interpreterAddress: CameraP.classifier.interpreter.address,
+      orientation: CameraP.orientation!,
+    );
+
+    List inferenceList = await CameraP
+        .isolate.inference(isolateData);
+
+    CameraP.presetSize = Size(
+      imageStream.width.toDouble(),
+      imageStream.height.toDouble(),
+    );
+
+    if (CameraP.canvasSize != null) {
+      widthRatio = CameraP.canvasSize!.width / CameraP.presetSize!.width;
+      heightRatio = CameraP.canvasSize!.height / CameraP.presetSize!.height;
+    }
+
+    inferences = {
+      for (int i = 0; i < inferenceList.length; i++)
+        Part.values[i]: Inference.list(inferenceList[i])
+          ..adjustRatio(widthRatio, heightRatio)
+    };
+
+    Inference.saveHistory(inferences!);
+    cameraP.staging();
+
+    if (!mounted) return;
+
+    doPredict = false;
+    ExerciseHandler.checkLimbs(Inference.refinedInferences);
+
+    painter = LimbPainter(
+      inferences: Inference.refinedInferences,
+      limbs: ExerciseHandler.limbs,
+    );
+
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    canvasSize = MediaQuery.of(context).size;
-    canvasSize = Size(canvasSize!.width, canvasSize!.height * .7);
     if (inferences == null) return const Scaffold();
 
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          // 카메라 전환 버튼
-          IconButton(
-            icon: const Icon(Icons.camera_alt),
-            onPressed: toggleCameraDirection,
+    return GetBuilder<CameraP>(
+      builder: (cameraP) {
+        return Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            leading: GestureDetector(
+              onTap: Get.back,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(.3),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ),
-        ],
-      ),
-      // 줌인/줌아웃 제스쳐 감지 위젯
-      body: SizedBox(
-        width: canvasSize!.width,
-        height: canvasSize!.height,
-        child: GestureDetector(
-          onScaleStart: (_) => initZoom = zoom,
-          onScaleUpdate: setZoomLevel,
+          body: GetBuilder<CameraP>(
+            builder: (cameraP) {
+              return SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Positioned(
+                      left: CameraP.horizontalError, right: CameraP.horizontalError,
+                      top: CameraP.verticalError, bottom: CameraP.verticalError,
+                      child: CameraPainterView(painter: painter),
+                    ),
+                    Positioned.fill(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(
+                          CameraP.screenSize!.width * .05, 80.0,
+                          CameraP.screenSize!.width * .05, 20.0,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const FloatingMessageWidget(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ScoreBoxWidget(
+                                  score: cameraP.score,
+                                  onPressed: cameraP.submitButtonPressed,
+                                  pressable: true,
+                                ),
+                                CameraToggleButton(initAsync: initAsync),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+}
+
+class CameraPainterView extends StatelessWidget {
+  const CameraPainterView({
+    Key? key,
+    required this.painter,
+  }) : super(key: key);
+
+  final CustomPainter painter;
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<CameraP>(
+      builder: (cameraP) {
+        return GestureDetector(
+          onScaleStart: (details) => cameraP.setInitZoom(),
+          onScaleUpdate: cameraP.setZoomLevel,
           child: CustomPaint(
-            // 카메라 위 Painter 장착
-            foregroundPainter: _painter,
-            child: CameraPreview(_cameraController),
+            foregroundPainter: painter,
+            child: CameraPreview(
+              cameraP.cameraController!,
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+
+class FloatingMessageWidget extends StatelessWidget {
+  const FloatingMessageWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    EdgeInsets padding = EdgeInsets.all(screenSize.width * .05);
+
+    return GetBuilder<CameraP>(
+      builder: (cameraP) {
+        return Container(
+          width: double.infinity,
+          height: 110.0,
+          padding: padding,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.background.withOpacity(.6),
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                cameraP.message,
+                style: textTheme.headlineSmall,
+              ),
+              Text(
+                cameraP.postureMessage,
+                style: textTheme.headlineSmall?.copyWith(
+                  color: cameraP.posture.color,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class ScoreBoxWidget extends StatefulWidget {
+  const ScoreBoxWidget({
+    Key? key,
+    required this.score,
+    this.onPressed,
+    this.pressable = false,
+  }) : super(key: key);
+
+  final int score;
+  final VoidCallback? onPressed;
+  final bool pressable;
+
+  @override
+  State<ScoreBoxWidget> createState() => _ScoreBoxWidgetState();
+}
+
+class _ScoreBoxWidgetState extends State<ScoreBoxWidget> {
+
+  @override
+  void didUpdateWidget(covariant ScoreBoxWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaleWidget(
+      onPressed: widget.onPressed,
+      child: Container(
+        width: 120.0, height: 80.0,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primaryContainer.withOpacity(.6),
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Center(
+          child: Text(
+            '${widget.score}',
+            style: textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class CameraToggleButton extends StatelessWidget {
+  const CameraToggleButton({
+    Key? key,
+    required this.initAsync,
+  }) : super(key: key);
+
+  final VoidCallback initAsync;
+
+  void onPressed() {
+    final cameraP = Get.find<CameraP>();
+    cameraP.toggleDirection();
+    initAsync();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<CameraP>(
+      builder: (cameraP) {
+        return ScaleWidget(
+          onPressed: onPressed,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Material(
+                color: Theme.of(context).colorScheme.secondaryContainer.withOpacity(.6),
+                borderRadius: BorderRadius.circular(40.0),
+                child: const SizedBox(width: 80.0, height: 80.0),
+              ),
+              Icon(
+                Icons.cameraswitch_rounded, size: 40.0,
+                color: Theme.of(context).colorScheme.onSecondaryContainer,
+              ),
+            ],
+          ),
+        );
+      }
     );
   }
 }

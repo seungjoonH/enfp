@@ -17,10 +17,10 @@ class FriendP extends GetxController {
 
   Future loadFriends() async {
     final userP = Get.find<UserP>();
-    userP.loggedUser.friends = [];
-    for (var uid in userP.loggedUser.friendUids) {
+    userP.loggedUser!.friends = [];
+    for (var uid in userP.loggedUser!.friendUids) {
       EUser friend = (await UserP.loadUser(uid))!;
-      userP.loggedUser.addFriend(friend);
+      userP.loggedUser!.addFriend(friend);
     }
     update();
   }

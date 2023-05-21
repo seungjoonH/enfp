@@ -16,15 +16,25 @@ class RankingP extends GetxController {
   RankType currentType = RankType.friend;
   List<EUser> users = [];
 
-  List<EUser> get rankUsers {
-    EUser loggedUser = Get.find<UserP>().loggedUser;
-    switch (currentType) {
+  List<EUser> get rankUsers => _getRankUsers(currentType);
+
+  List<EUser> _getRankUsers(RankType type) {
+    EUser loggedUser = Get.find<UserP>().loggedUser!;
+    switch (type) {
       case RankType.friend:
         return users.where((user) => loggedUser.uid == user.uid
             || loggedUser.friendUids.contains(user.uid)).toList();
       case RankType.entire: return users;
     }
   }
+
+  int _getMyRank(RankType type) {
+    EUser loggedUser = Get.find<UserP>().loggedUser!;
+    List<EUser> users = _getRankUsers(type);
+    return users.indexWhere((user) => user.uid == loggedUser.uid) + 1;
+  }
+  int get myEntireRank => _getMyRank(RankType.entire);
+  int get myFriendRank => _getMyRank(RankType.friend);
 
   void changeType(RankType type) async {
     currentType = type;

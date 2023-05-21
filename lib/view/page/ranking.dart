@@ -39,7 +39,7 @@ class RankingPage extends StatelessWidget {
                     itemCount: rankingP.rankUsers.length,
                     itemBuilder: (context, index) {
                       EUser user = rankingP.rankUsers[index];
-                      bool isMe = user.uid == Get.find<UserP>().loggedUser.uid;
+                      bool isMe = user.uid == Get.find<UserP>().loggedUser!.uid;
 
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -65,8 +65,8 @@ class RankingPage extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 20.0),
-                          SizedBox(
-                            width: 86.0,
+                          Expanded(
+                            flex: 100,
                             child: Text(
                               user.nickname,
                               overflow: TextOverflow.ellipsis,
@@ -80,6 +80,7 @@ class RankingPage extends StatelessWidget {
                           ),
                           const SizedBox(width: 20.0),
                           Expanded(
+                            flex: 90,
                             child: Text(
                               '${toLocalString(user.score)} ${LangP.find('point')}',
                               textAlign: TextAlign.end,

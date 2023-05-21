@@ -18,7 +18,7 @@ class FriendPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<UserP>(
       builder: (userP) {
-        List<EUser> friends = userP.loggedUser.friends;
+        List<EUser> friends = userP.loggedUser!.friends;
 
         return Scaffold(
           appBar: AppBar(
@@ -55,30 +55,32 @@ class FriendPage extends StatelessWidget {
           ),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                ECard(
-                  title: capitalizeFirstChar(LangP.find('friend')),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Column(
-                      children: friends.map((friend) => Container(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          children: [
-                            ProfileImageWidget(),
-                            const SizedBox(width: 20.0),
-                            SizedBox(
-                              width: 180.0,
-                              child: Text(friend.nickname, style: textTheme.titleLarge),
-                            ),
-                          ],
-                        ),
-                      )).toList(),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  ECard(
+                    title: capitalizeFirstChar(LangP.find('friend')),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Column(
+                        children: friends.map((friend) => Container(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Row(
+                            children: [
+                              ProfileImageWidget(user: friend),
+                              const SizedBox(width: 20.0),
+                              SizedBox(
+                                width: 180.0,
+                                child: Text(friend.nickname, style: textTheme.titleLarge),
+                              ),
+                            ],
+                          ),
+                        )).toList(),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           bottomNavigationBar: const EBottomNavigationBar(),

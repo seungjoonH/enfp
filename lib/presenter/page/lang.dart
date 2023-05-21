@@ -1,6 +1,8 @@
 import 'package:enfp/global/string.dart';
 import 'package:enfp/model/enum/lang.dart';
 import 'package:enfp/presenter/model/user.dart';
+import 'package:enfp/presenter/model/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 class LangP extends GetxController {
@@ -34,13 +36,15 @@ class LangP extends GetxController {
     'male'      : ['male', '남성'],
     'next'      : ['next', '다음'],
     'nickname'  : ['nickname', '별명'],
-    'point'     : ['points', '포인트'],
+    'point'     : ['pts', '포인트'],
     'profile'   : ['profile', '프로필'],
     'rank'      : ['rank', '랭킹'],
     'register'  : ['register', '회원가입'],
+    'save'      : ['save', '저장'],
     'score'     : ['score', '점수'],
     'search'    : ['search', '검색'],
     'sex'       : ['sex', '성별'],
+    'theme'     : ['theme', '테마'],
     'times'     : ['times', '회'],
     'today'     : ['today', '오늘'],
     'weight'    : ['weight', '체중'],
@@ -66,6 +70,16 @@ class LangP extends GetxController {
       'not-8'     : ['Enter eight letters', '여덟글자가 아닙니다'],
       'ex-stat'   : ["$found's exercise status", '$found의 운동 현황'],
       'cal-of'    : ['Calendar of $found', '$found 달력'],
+      'stg-down'  : ['Go DOWN', '내려가세요'],
+      'stg-up'    : ['Go UP', '올라오세요'],
+      'fast'      : ['Too fast', '조금만 천천히 해주세요'],
+      'wrong'     : ['Straighten your posture', '자세를 바르게 해주세요'],
+      'good'      : ['GOOD!', '좋아요!'],
+      'great'     : ['GREAT!', '잘했어요!'],
+      'perfect'   : ['PERFECT!', '완벽해요!'],
+      'hm-und'    : ['No person is detected', '사람이 인식되지 않습니다'],
+      'near'      : ["Too close", '너무 가까워요'],
+      'far'       : ['Come a little closer', '조금 더 가까이 와주세요!'],
     };
   }
 
@@ -87,12 +101,13 @@ class LangP extends GetxController {
 
   void loadLang() {
     final userP = Get.find<UserP>();
-    setLang(userP.loggedUser.lang);
+    setLang(userP.loggedUser!.lang);
   }
 
   void saveLang() {
     final userP = Get.find<UserP>();
-    userP.loggedUser.lang = lang;
+    if (!userP.isLogged) return;
+    userP.loggedUser!.lang = lang;
     userP.save();
   }
 }

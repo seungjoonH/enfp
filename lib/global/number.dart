@@ -23,5 +23,15 @@ List<double> toDoubleList(List<num> list) {
   return list.map((e) => e.toDouble()).toList();
 }
 
+bool isSorted(List<num> list, {bool desc = false}) {
+  bool result = true;
+  for (int i = 0; i < list.length - 1; i++) {
+    if (list[i] == list[i + 1]) { result &= true; continue; }
+    bool gt = list[i] > list[i + 1];
+    result &= desc ? gt : !gt;
+  }
+  return result;
+}
+
 String sign(num n) => n < 0 ? '-' : '+';
 String withSign(num n) => '${sign(n)}${(n).abs()}';

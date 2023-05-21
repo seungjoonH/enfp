@@ -4,11 +4,14 @@ import 'package:enfp/global/date.dart';
 import 'package:enfp/global/number.dart';
 import 'package:enfp/global/string.dart';
 import 'package:enfp/global/theme.dart';
+import 'package:enfp/presenter/global.dart';
 import 'package:enfp/presenter/model/user.dart';
 import 'package:enfp/presenter/page/camera.dart';
 import 'package:enfp/presenter/page/lang.dart';
+import 'package:enfp/presenter/page/ranking.dart';
 import 'package:enfp/view/widget/bottom_bar.dart';
 import 'package:enfp/view/widget/card.dart';
+import 'package:enfp/view/widget/scale_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -18,9 +21,14 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final globalP = Get.find<GlobalP>();
+
+    CameraP.screenSize = MediaQuery.of(context).size;
+    CameraP.orientation = MediaQuery.of(context).orientation;
+
     final userP = Get.find<UserP>();
-    int goal = userP.loggedUser.goal;
-    int record = userP.loggedUser.getAmount(today);
+    int goal = userP.loggedUser!.goal;
+    int record = userP.loggedUser!.getAmount(today);
     DateTime firstDay = firstDayOfMonth(today);
     int firstWeekday = firstDay.weekday;
     int rows = today.difference(firstDay).inDays ~/ 7 + 1;
@@ -41,6 +49,7 @@ class HomePage extends StatelessWidget {
                     Expanded(
                       child: ECard(
                         title: capitalizeFirstChar(LangP.find('score')),
+                        onPressed: () => globalP.navigate(2),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
@@ -52,7 +61,7 @@ class HomePage extends StatelessWidget {
                                 color: Theme.of(context).colorScheme.background,
                               ),
                               child: Center(
-                                child: Text(toLocalString(userP.loggedUser.score)),
+                                child: Text(toLocalString(userP.loggedUser!.score)),
                               ),
                             ),
                           ],
@@ -63,32 +72,37 @@ class HomePage extends StatelessWidget {
                     Expanded(
                       child: ECard(
                         title: capitalizeFirstChar(LangP.find('rank')),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                              width: 48.0, height: 48.0,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Theme.of(context).colorScheme.background,
-                              ),
-                              child: Center(
-                                child: Text('1000'),
-                              ),
-                            ),
-                            const SizedBox(width: 5.0),
-                            Container(
-                              width: 48.0, height: 48.0,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Theme.of(context).colorScheme.background,
-                              ),
-                              child: Center(
-                                child: Text('1000'),
-                              ),
-                            ),
-                          ],
+                        onPressed: () => globalP.navigate(2),
+                        child: GetBuilder<RankingP>(
+                          builder: (rankingP) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Container(
+                                  width: 48.0, height: 48.0,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Theme.of(context).colorScheme.background,
+                                  ),
+                                  child: Center(
+                                    child: Text('${rankingP.myFriendRank}'),
+                                  ),
+                                ),
+                                const SizedBox(width: 5.0),
+                                Container(
+                                  width: 48.0, height: 48.0,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Theme.of(context).colorScheme.background,
+                                  ),
+                                  child: Center(
+                                    child: Text('${rankingP.myEntireRank}'),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
                         ),
                       ),
                     ),
@@ -109,6 +123,8 @@ class HomePage extends StatelessWidget {
                         lineHeight: 35.0,
                         barRadius: const Radius.circular(5.0),
                         padding: EdgeInsets.zero,
+                        animation: true,
+                        curve: Curves.easeInOut,
                       ),
                       const SizedBox(height: 5.0),
                       Text('$record / $goal ${LangP.find('times')}'),
@@ -129,7 +145,7 @@ class HomePage extends StatelessWidget {
                           int day = 7 * i + j - firstWeekday + 2;
                           DateTime date = firstDay.add(Duration(days: day - 1));
                           bool avail = day == date.day && isInDateRange(date, firstDay, today);
-                          bool completed = userP.loggedUser.getCompleted(date);
+                          bool completed = userP.loggedUser!.getCompleted(date);
                           String dayString = avail ? '$day' : '';
                           Color color = avail
                               ? Theme.of(context).colorScheme.background
@@ -161,6 +177,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(height: 60.0),
               ],
             ),
           ),

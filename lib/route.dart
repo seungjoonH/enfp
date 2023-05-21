@@ -4,6 +4,7 @@ import 'package:enfp/view/page/friend/search.dart';
 import 'package:enfp/view/page/home.dart';
 import 'package:enfp/view/page/lang.dart';
 import 'package:enfp/view/page/login.dart';
+import 'package:enfp/view/page/profile_image.dart';
 import 'package:enfp/view/page/ranking.dart';
 import 'package:enfp/view/page/register.dart';
 import 'package:enfp/view/page/setting.dart';
@@ -30,6 +31,7 @@ class ERoute {
     '/ranking': const RankingPage(),
     '/setting': const SettingPage(),
     '/camera': const CameraPage(),
+    '/profileImage': const ProfileImagePage(),
   };
 
   // 겟페이지 리스트

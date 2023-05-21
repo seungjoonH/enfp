@@ -1,6 +1,7 @@
 import 'package:enfp/model/class/user.dart';
 import 'package:enfp/presenter/firebase/firebase.dart';
 import 'package:enfp/presenter/page/lang.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class UserP extends GetxController {
@@ -19,7 +20,9 @@ class UserP extends GetxController {
 
   Map<String, dynamic> data = {};
 
-  EUser loggedUser = EUser();
+  EUser? loggedUser;
+
+  bool get isLogged => loggedUser != null;
 
   /// methods
   Future login(EUser user) async {
@@ -34,17 +37,21 @@ class UserP extends GetxController {
 
   Future load() async {
     var json = (await collection
-        .doc(loggedUser.uid).get()).data();
+        .doc(loggedUser!.uid).get()).data();
     if (json == null) return;
     loggedUser = EUser.fromJson(json);
   }
 
   void save() => collection
-      .doc(loggedUser.uid)
-      .set(loggedUser.toJson());
+      .doc(loggedUser!.uid)
+      .set(loggedUser!.toJson());
 
   void delete() => collection
-      .doc(loggedUser.uid).delete();
+      .doc(loggedUser!.uid).delete();
 
 
+  void setThemeMode(ThemeMode mode) {
+    loggedUser!.themeMode = mode;
+    save(); update();
+  }
 }

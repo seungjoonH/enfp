@@ -1,12 +1,49 @@
+import 'package:enfp/global/number.dart';
+import 'package:enfp/model/class/painter/edge.dart';
+import 'package:enfp/model/enum/part.dart';
 import 'package:flutter/material.dart';
 
 class Inference {
-  // 측정 위치 및 확률
+  static int length = Edges.list.length;
+  static int historyMax = 4;
+  static Map<Part, List<Inference>> history = {
+    for (Part part in Part.values) part: [],
+  };
+
+  static void saveHistory(Map<Part, Inference> inferences) {
+    inferences.forEach((part, inference) {
+      history[part]!.add(inference);
+      if (history[part]!.length < historyMax) return;
+      history[part]!.removeAt(0);
+    });
+  }
+
+  static Map<Part, List<num>> get historyX => {
+    for (Part part in Part.values)
+      part: history[part]!.map((h) => h.x).toList()
+  };
+  static Map<Part, List<num>> get historyY => {
+    for (Part part in Part.values)
+      part: history[part]!.map((h) => h.y).toList()
+  };
+  static Map<Part, List<num>> get historyP => {
+    for (Part part in Part.values)
+      part: history[part]!.map((h) => h.prob).toList()
+  };
+
+  static Map<Part, Inference> get refinedInferences => {
+    for (Part part in Part.values)
+      part: Inference(
+        average(historyX[part]!).toInt(),
+        average(historyY[part]!).toInt(),
+        average(historyP[part]!).toDouble(),
+      ),
+  };
+
   late int x;
   late int y;
   late double prob;
 
-  /* 생성자 */
   Inference(this.x, this.y, this.prob);
   Inference.list(List<dynamic> list) {
     x = list[0];
@@ -14,16 +51,13 @@ class Inference {
     prob = list[2];
   }
 
-  // 위치를 Offset 형태로 반환
   Offset get offset => Offset(x.toDouble(), y.toDouble());
 
-  // 비율에 맞게 좌표 수정
   void adjustRatio(double width, double height) {
     x = (x * width).round();
     y = (y * height).round();
   }
 
-  // 문자열 변환 (디버깅)
   @override
   String toString() {
     return 'pos:($x, $y), prob: ${prob.toStringAsFixed(2)}';

@@ -4,11 +4,11 @@ import 'package:enfp/presenter/page/friend/friend.dart';
 import 'package:enfp/presenter/page/friend/search.dart';
 import 'package:enfp/presenter/page/home.dart';
 import 'package:enfp/presenter/page/lang.dart';
+import 'package:enfp/presenter/page/profile_image.dart';
 import 'package:enfp/presenter/page/ranking.dart';
 import 'package:enfp/presenter/page/register.dart';
 import 'package:enfp/presenter/page/setting.dart';
 import 'package:enfp/presenter/widget/input.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class GlobalP extends GetxController {
@@ -16,13 +16,6 @@ class GlobalP extends GetxController {
     final globalP = Get.find<GlobalP>();
     globalP.navIndex = 0;
     globalP.update();
-  }
-
-  ThemeMode mode = ThemeMode.light;
-
-  void toggleThemeMode() {
-    mode = ThemeMode.values[3 - mode.index];
-    update();
   }
 
   int navIndex = 0;
@@ -49,6 +42,7 @@ class GlobalP extends GetxController {
     Get.put(RankingP());
     Get.put(SettingP());
     Get.put(CameraP());
+    Get.put(ProfileImageP());
 
     Get.put(InputP());
   }

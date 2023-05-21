@@ -2,16 +2,19 @@ import 'dart:isolate';
 
 import 'package:camera/camera.dart';
 import 'package:enfp/util/classifier.dart';
+import 'package:flutter/material.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 
 class IsolateData {
   late CameraImage cameraImage;
   late int interpreterAddress;
+  late Orientation orientation;
   SendPort? responsePort;
 
   IsolateData({
     required this.cameraImage,
     required this.interpreterAddress,
+    required this.orientation,
     this.responsePort,
   });
 }
@@ -42,7 +45,7 @@ class IsolateUtils {
       );
       classifier.performOperations(isolateData.cameraImage);
       classifier.runModel();
-      List<dynamic> results = classifier.parseLandmarkData();
+      List<dynamic> results = classifier.parseLandmarkData(isolateData);
       isolateData.responsePort!.send(results);
     }
   }
