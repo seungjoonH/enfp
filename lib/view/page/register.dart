@@ -23,14 +23,6 @@ class _RegisterPageState extends State<RegisterPage> {
           appBar: AppBar(
             title: Text(capitalizeFirstChar(LangP.find('register'))),
             actions: [
-              // GetBuilder<GlobalP>(
-              //   builder: (globalP) {
-              //     return IconButton(
-              //       icon: Icon([null, Icons.dark_mode, Icons.light_mode][globalP.mode.index]),
-              //       onPressed: globalP.toggleThemeMode,
-              //     );
-              //   },
-              // ),
               IconButton(
                 icon: Text(LangP.find('next')),
                 onPressed: registerP.submit,
@@ -75,7 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
         );
-      }
+      },
     );
   }
 }

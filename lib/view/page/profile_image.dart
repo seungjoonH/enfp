@@ -96,7 +96,7 @@ class ProfileImagePage extends StatelessWidget {
             ),
           ),
         );
-      }
+      },
     );
   }
 }

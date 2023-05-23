@@ -1,9 +1,9 @@
 import 'package:enfp/global/string.dart';
-import 'package:enfp/global/theme.dart';
 import 'package:enfp/model/enum/lang.dart';
 import 'package:enfp/presenter/firebase/auth/auth.dart';
 import 'package:enfp/presenter/model/user.dart';
 import 'package:enfp/presenter/page/lang.dart';
+import 'package:enfp/presenter/page/my_info.dart';
 import 'package:enfp/view/widget/profile_image.dart';
 import 'package:enfp/view/widget/bottom_bar.dart';
 import 'package:enfp/view/widget/card.dart';
@@ -33,11 +33,14 @@ class SettingPage extends StatelessWidget {
                       children: [
                         ProfileImageWidget(user: userP.loggedUser!, size: 80.0),
                         const SizedBox(width: 20.0),
-                        SizedBox(
-                          width: 180.0,
-                          child: Text(
-                            userP.loggedUser!.nickname,
-                            style: Theme.of(context).textTheme.titleLarge,
+                        GestureDetector(
+                          onTap: MyInfoP.toMyInfo,
+                          child: SizedBox(
+                            width: 180.0,
+                            child: Text(
+                              userP.loggedUser!.nickname,
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
                           ),
                         ),
                       ],

@@ -12,6 +12,7 @@ class RegisterP extends GetxController {
     Get.toNamed('/register');
     registerP.init();
   }
+
   void init() {
     final registerP = Get.find<RegisterP>();
     final inputP = Get.find<InputP>();

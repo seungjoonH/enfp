@@ -11,7 +11,7 @@ class ProfileImageP extends GetxController {
 
   static void toProfileImage(EUser user) {
     Get.toNamed('/profileImage', arguments: user);
-    final profileImageP = Get.find<ProfileImageP>()
+    final profileImageP = Get.find<ProfileImageP>();
     profileImageP.user = user;
     profileImageP.init();
   }

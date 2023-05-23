@@ -206,7 +206,7 @@ class FloatingMessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    EdgeInsets padding = EdgeInsets.all(screenSize.width * .05);
+    EdgeInsets padding = EdgeInsets.all(screenSize.width * .02);
 
     return GetBuilder<CameraP>(
       builder: (cameraP) {

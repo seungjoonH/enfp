@@ -36,6 +36,7 @@ class RankingPage extends StatelessWidget {
                   title: capitalizeFirstChar(LangP.find('rank')),
                   width: double.infinity,
                   child: ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: rankingP.rankUsers.length,
                     itemBuilder: (context, index) {
                       EUser user = rankingP.rankUsers[index];

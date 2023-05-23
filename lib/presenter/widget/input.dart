@@ -1,9 +1,11 @@
 import 'package:enfp/global/date.dart';
 import 'package:enfp/global/string.dart';
 import 'package:enfp/model/class/user.dart';
+import 'package:enfp/presenter/model/user.dart';
 import 'package:enfp/presenter/page/lang.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class Field {
   bool invalid = false;
@@ -39,6 +41,12 @@ class InputP extends GetxController {
   int get weight => int.parse(getFields('weight')!.controller.text);
   int get goal => int.parse(getFields('goal')!.controller.text);
 
+  set nickname(String text) => getFields('nickname')!.controller.text = text;
+  set birth(DateTime date) => getFields('birth')!.controller.text = dateToString('yyyyMMdd', date)!;
+  set height(int value) => getFields('height')!.controller.text = '$value';
+  set weight(int value) => getFields('weight')!.controller.text = '$value';
+  set goal(int value) => getFields('goal')!.controller.text = '$value';
+
   bool get valid => _fields.values.map((field) => field.invalid).every((e) => !e);
 
   Map<String, bool> getConditions(String type, String text) {
@@ -49,7 +57,7 @@ class InputP extends GetxController {
         'less-2'   : text.length < 2,
         'more-10'  : text.length > 10,
         'has-scv'  : hasSeparatedConsonantOrVowel(text),
-        'has-space': text.contains(' '),
+        // 'has-space': text.contains(' '),
         'has-spc'  : RegExp(r'[`~!@#$%^&*|"' r"'‘’””;:/?]").hasMatch(text),
         'only-num' : int.tryParse(text) != null,
         'enter'    : text == '',
@@ -81,10 +89,20 @@ class InputP extends GetxController {
   }
 
   void init() {
-    _fields.forEach((keyword, field) {
-      field.hintText = initHintTexts[keyword];
-      field.controller.clear();
-    });
+    final userP = Get.find<UserP>();
+    if (userP.loggedUser == null) {
+      _fields.forEach((keyword, field) {
+        field.hintText = initHintTexts[keyword];
+        field.controller.clear();
+      });
+    }
+    else {
+      nickname = userP.loggedUser!.nickname;
+      birth = userP.loggedUser!.birth;
+      height = userP.loggedUser!.height;
+      weight = userP.loggedUser!.weight;
+      goal = userP.loggedUser!.goal;
+    }
     update();
   }
 
